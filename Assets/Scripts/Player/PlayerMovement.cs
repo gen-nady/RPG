@@ -25,6 +25,7 @@ namespace Player
             _rigidbody.velocity = new Vector3(_fixedJoystick.Direction.x, 0, _fixedJoystick.Direction.y) * _speed * Time.fixedDeltaTime;
             if ((_fixedJoystick.Direction.x > 0 || _fixedJoystick.Direction.y > 0) && _currentStatePlayer != CurrentStatePlayer.run)
             {
+                _animator.ResetTrigger("Idle");
                 _animator.SetTrigger("Run");
                 _currentStatePlayer = CurrentStatePlayer.run;
             }
