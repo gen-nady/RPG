@@ -32,26 +32,14 @@ namespace Player
 
         private void Update()
         {
-#if (UNITY_EDITOR)
-            if(Input.GetKey(KeyCode.Space))
-                Jump();
-            if (Input.GetAxis("Horizontal") != 0)
-                transform.Rotate(new Vector3(0,Input.GetAxis("Horizontal"),0)  * _rotateSpeed * Time.deltaTime);
-#else
             if (_fixedJoystick.Direction.x != 0)
                 transform.Rotate(new Vector3(0,_fixedJoystick.Direction.x,0)  * _rotateSpeed * Time.deltaTime);
-#endif
-                
         }
 
         private void FixedUpdate()
         {
-#if (UNITY_EDITOR)
-            Vector3 moveVector = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * _speed);
-#else
-            Vector3 moveVector = transform.TransformDirection(new Vector3(_fixedJoystick.Direction.x, 0, _fixedJoystick.Direction.y) * _speed);
-#endif
-            _rigidbody.velocity = new Vector3(moveVector.x, _gravityModifer,moveVector.z) * Time.fixedDeltaTime;
+            Vector3 moveVector = transform.TransformDirection(new Vector3(_fixedJoystick.Direction.x, 0, _fixedJoystick.Direction.y > 0 ? _fixedJoystick.Direction.y : _fixedJoystick.Direction.y/2)* _speed );
+            _rigidbody.velocity = new Vector3( moveVector.x , _gravityModifer,moveVector.z) * Time.fixedDeltaTime;
             AnimationPlayer();
         }
 
@@ -59,7 +47,7 @@ namespace Player
         {
             if (Physics.CheckSphere(_groundCheck.position, _radiusCheckGround, _groundMask))
             {
-                _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+                _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
                 _animator.SetTrigger("Jump");
             }
             
@@ -67,21 +55,20 @@ namespace Player
         
         private void AnimationPlayer()
         {
-#if (UNITY_EDITOR)
-            if ((Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Vertical") != 0) && (_currentStatePlayer != CurrentStatePlayer.run))
-#else
-            if ((_fixedJoystick.Direction.x > 0 || _fixedJoystick.Direction.y != 0) && (_currentStatePlayer != CurrentStatePlayer.run))
-#endif
+            if ((_fixedJoystick.Direction.x > 0 || _fixedJoystick.Direction.y != 0))
             {
-                _animator.ResetTrigger("Idle");
-                _animator.SetTrigger("Run");
-                _currentStatePlayer = CurrentStatePlayer.run;
+                _animator.SetFloat("Run",
+                    _fixedJoystick.Direction.y > 0
+                        ? Mathf.Max(Mathf.Abs(_rigidbody.velocity.x), Mathf.Abs(_rigidbody.velocity.z))
+                        : 0);
+                if (_currentStatePlayer != CurrentStatePlayer.run)
+                {
+                    _animator.ResetTrigger("Idle");
+                    _animator.SetTrigger("StartRun");
+                    _currentStatePlayer = CurrentStatePlayer.run;
+                }
             }
-#if (UNITY_EDITOR)
-            if ((Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) && (_currentStatePlayer != CurrentStatePlayer.idle))
-#else
             if((_fixedJoystick.Direction.x == 0 && _fixedJoystick.Direction.y == 0) && (_currentStatePlayer != CurrentStatePlayer.idle))
-#endif
             {
                 _animator.SetTrigger("Idle");
                 _currentStatePlayer = CurrentStatePlayer.idle;
