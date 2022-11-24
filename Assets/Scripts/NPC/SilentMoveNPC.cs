@@ -20,7 +20,7 @@ namespace NPC
             _rigibody = GetComponent<Rigidbody>();
             _animator = GetComponent<Animator>();
             InitNPC();
-            _animator.SetTrigger("Walk");
+            //_animator.SetTrigger("Walk");
         }
 
         protected override void InitNPC()
@@ -30,13 +30,17 @@ namespace NPC
         }
         private void Update()
         {
-            _timeToRotate -= Time.deltaTime;
-            if (_timeToRotate <= 0)
-            {
-                transform.RotateAround(transform.position, transform.up, 180f);
-                _direction *= -1;
-                _timeToRotate = _defaultTimeRotate;
-            }
+            if (Input.GetKey(KeyCode.A))
+                _movable = new StayNPC();
+            if (Input.GetKey(KeyCode.D))
+                _movable = new FreeMoveNPC(_rigibody, _speed);
+            // _timeToRotate -= Time.deltaTime;
+            // if (_timeToRotate <= 0)
+            // {
+            //     transform.RotateAround(transform.position, transform.up, 180f);
+            //     _direction *= -1;
+            //     _timeToRotate = _defaultTimeRotate;
+            // }
             Movement();
         }
         

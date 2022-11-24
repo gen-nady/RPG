@@ -5,12 +5,12 @@ namespace NPC
     public abstract class NPC : MonoBehaviour
     {
         protected int _healht;
-        public IMovable _movable;
-        public ISpeakble _speakble;
+        protected IMovable _movable;
+        protected ISpeakble _speakble;
         
         protected abstract void InitNPC();
 
-        public void Speak()
+        protected void Speak()
         {
             _speakble.Speak();
         }
