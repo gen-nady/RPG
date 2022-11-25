@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Player
 {
+    [RequireComponent(typeof(Rigidbody),typeof(Animator))]
     public class PlayerMovement : MonoBehaviour
     {
         [Header("Jump")]
@@ -10,8 +13,11 @@ namespace Player
         [SerializeField] private LayerMask _groundMask;
         [SerializeField] private float _radiusCheckGround;
         [SerializeField] private float _jumpForce;
-        private bool grounded;
         private bool isJump;
+        private bool isFall;
+        private bool grounded => Physics.CheckSphere(_groundCheck.position, _radiusCheckGround,_groundMask);
+        private readonly float timeToFall = 0.3f;
+        private float timerToFall;
         [Header("Movement")]
         [SerializeField] private FixedJoystick _fixedJoystick;
         [SerializeField] private Transform orientation;
@@ -22,83 +28,71 @@ namespace Player
         private Rigidbody _rigidbody;
         private Animator _animator;
         private CurrentStatePlayer _currentStatePlayer;
-        
+        //Helper
+        private Vector3 zeroGravity => new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
+        private float currentSpeedRunAnimation => _fixedJoystick.Direction.y > 0
+            ? Mathf.Max(Mathf.Abs(_fixedJoystick.Direction.x), Mathf.Abs(_fixedJoystick.Direction.y))
+            : 0;
+        #region Mono
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
             _animator = GetComponent<Animator>();
             _currentStatePlayer = CurrentStatePlayer.idle;
             _rigidbody.freezeRotation = true;
+            timerToFall = timeToFall;
         }
 
         private void Update()
         {
-            // ground check
-            grounded = Physics.CheckSphere(_groundCheck.position, _radiusCheckGround, _groundMask);
-            if (_fixedJoystick.Direction.x != 0)
-                transform.Rotate(new Vector3(0, _fixedJoystick.Direction.x, 0) * _rotateSpeed * Time.deltaTime);
             SpeedControl();
-            if (grounded)
-            {
-                isJump = false;
-                _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
-            }
-            else
-            {
-                Debug.Log("Зашло");
-                _rigidbody.AddForce(Vector3.down * _gravity, ForceMode.Force);
-            }
+            Rotate();
+            CheckGround();
         }
-
+        
         private void FixedUpdate()
         {
-            MovePlayer();
-            AnimationPlayer();
+            Move();
+            AnimationMovePlayer();
         }
+        
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(_groundCheck.position, _radiusCheckGround);
+        }
+        #endregion
 
-        private void MovePlayer()
+        #region Move
+        private void Move()
         {
             _moveDirection = (orientation.forward * _fixedJoystick.Vertical + orientation.right * _fixedJoystick.Horizontal);
-            if(_fixedJoystick.Vertical > 0)
+            if(_fixedJoystick.Vertical > 0f)
                 _rigidbody.AddForce(_moveDirection.normalized * _moveSpeed * 10, ForceMode.Force);
             else
                 _rigidbody.AddForce(_moveDirection.normalized * _moveSpeed, ForceMode.Force);
-            if(_fixedJoystick.Direction.x == 0 && _fixedJoystick.Direction.y == 0)
+            if(_fixedJoystick.Direction.x == 0f && _fixedJoystick.Direction.y == 0f)
                 _rigidbody.velocity =new Vector3(0f, _rigidbody.velocity.y,0f);
         }
 
         private void SpeedControl()
         {
-            var flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
-            
-            if (flatVel.magnitude > _moveSpeed)
+            if (zeroGravity.magnitude > _moveSpeed)
             {
-                Vector3 limitedVel = flatVel.normalized * _moveSpeed;
+                Vector3 limitedVel = zeroGravity.normalized * _moveSpeed;
                 _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z);
             }
         }
-        
-        private async void Jump()
+
+        private void Rotate()
         {
-            if (grounded)
-            {
-                isJump = true;
-                _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
-                _rigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
-                _animator.SetTrigger("Jump");
-                await Task.Delay(500);
-                _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
-                _rigidbody.AddForce(Vector3.down * _gravity*8, ForceMode.Impulse);
-            }
+            if (_fixedJoystick.Direction.x != 0f)
+                transform.Rotate(new Vector3(0f, _fixedJoystick.Direction.x, 0f) * _rotateSpeed * Time.deltaTime);
         }
-        private void AnimationPlayer()
+        private void AnimationMovePlayer()
         {
             if (_fixedJoystick.Direction.x > 0 || _fixedJoystick.Direction.y != 0)
             {
-                _animator.SetFloat("Run",
-                    _fixedJoystick.Direction.y > 0
-                        ? Mathf.Max(Mathf.Abs(_fixedJoystick.Direction.x), Mathf.Abs(_fixedJoystick.Direction.y))
-                        : 0);
+                _animator.SetFloat("Run",currentSpeedRunAnimation);
                 if (_currentStatePlayer != CurrentStatePlayer.run)
                 {
                     _animator.ResetTrigger("Idle");
@@ -112,89 +106,61 @@ namespace Player
                 _currentStatePlayer = CurrentStatePlayer.idle;
             }
         }
+        #endregion
+
+        #region Jump
+        private void CheckGround()
+        {
+            if (grounded)
+            {
+                timerToFall = timeToFall;
+                _rigidbody.velocity = zeroGravity;
+                if (isJump || isFall)
+                {
+                    isJump = false;
+                    isFall = false;
+                    _animator.ResetTrigger("Fall");
+                    _animator.ResetTrigger("Jump");
+                    if (_currentStatePlayer == CurrentStatePlayer.run)
+                    {
+                        _animator.ResetTrigger("Idle");
+                        _animator.SetFloat("Run",currentSpeedRunAnimation);
+                        _animator.SetTrigger("StartRun");
+                    }
+                    else if (_currentStatePlayer == CurrentStatePlayer.idle)
+                    {
+                        _animator.SetTrigger("Idle");
+                    }
+                }
+            }
+            else
+            {
+                timerToFall -= Time.deltaTime;
+                _rigidbody.AddForce(Vector3.down * _gravity, ForceMode.Force);
+                if (!isFall && timerToFall < 0f && !isJump)
+                {
+                    _animator.SetTrigger("Fall");
+                    isFall = true;
+                }
+            }
+        }
+        
+        private void Jump()
+        {
+            if (grounded)
+            {
+                StartCoroutine(JumpWait());
+                _rigidbody.velocity = zeroGravity;
+                _rigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
+                _animator.SetTrigger("Jump");
+            }
+        }
+        
+        private IEnumerator JumpWait()
+        {
+            yield return new WaitForSeconds(0.2f);
+            isJump = true;
+        }
+        #endregion
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//     [Header("Jump")]
-    //     [SerializeField] private Transform _groundCheck;
-    //     [SerializeField] private LayerMask _groundMask;
-    //     [SerializeField] private float _jumpForce;
-    //     [SerializeField] private float _radiusCheckGround;
-    //     [SerializeField] private float _gravityModifer;
-    //     [Header("Move")]
-    //     [SerializeField] private FixedJoystick _fixedJoystick;
-    //     [SerializeField] private float _speed;
-    //     [SerializeField] private float _rotateSpeed;
-    //     
-    //     private Animator _animator;
-    //     private Rigidbody _rigidbody;
-    //     private CurrentStatePlayer _currentStatePlayer;
-    //
-    //     private void Awake()
-    //     {
-    //         _rigidbody = GetComponent<Rigidbody>();
-    //         _animator = GetComponent<Animator>();
-    //         _currentStatePlayer = CurrentStatePlayer.idle;
-    //     }
-    //
-    //     private void Update()
-    //     {
-    //         if (_fixedJoystick.Direction.x != 0)
-    //             transform.Rotate(new Vector3(0,_fixedJoystick.Direction.x,0)  * _rotateSpeed * Time.deltaTime);
-    //     }
-    //
-    //     private void FixedUpdate()
-    //     {
-    //      
-    //         Vector3 moveVector = (transform.TransformDirection(new Vector3(_fixedJoystick.Direction.x, 0, 
-    //             _fixedJoystick.Direction.y > 0 ? _fixedJoystick.Direction.y : _fixedJoystick.Direction.y/2)) * _speed);
-    //         Debug.Log(moveVector);
-    //         _rigidbody.AddForce(new Vector3( moveVector.x,_gravityModifer, moveVector.z), ForceMode.Acceleration);
-    //         AnimationPlayer();
-    //     }
-    //
-    //     public void Jump()
-    //     {
-    //         if (Physics.CheckSphere(_groundCheck.position, _radiusCheckGround, _groundMask))
-    //         {
-    //             _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
-    //             _animator.SetTrigger("Jump");
-    //         }
-    //         
-    //     }
-    //     
-    //     private void AnimationPlayer()
-    //     {
-    //         if ((_fixedJoystick.Direction.x > 0 || _fixedJoystick.Direction.y != 0))
-    //         {
-    //             _animator.SetFloat("Run",
-    //                 _fixedJoystick.Direction.y > 0
-    //                     ? Mathf.Max(Mathf.Abs(_rigidbody.velocity.x), Mathf.Abs(_rigidbody.velocity.z))
-    //                     : 0);
-    //             if (_currentStatePlayer != CurrentStatePlayer.run)
-    //             {
-    //                 _animator.ResetTrigger("Idle");
-    //                 _animator.SetTrigger("StartRun");
-    //                 _currentStatePlayer = CurrentStatePlayer.run;
-    //             }
-    //         }
-    //         if((_fixedJoystick.Direction.x == 0 && _fixedJoystick.Direction.y == 0) && (_currentStatePlayer != CurrentStatePlayer.idle))
-    //         {
-    //             _animator.SetTrigger("Idle");
-    //             _currentStatePlayer = CurrentStatePlayer.idle;
-    //         }
-    //     }
-    // }
-
