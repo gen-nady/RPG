@@ -20,7 +20,6 @@ namespace Player
         private float timerToFall;
         [Header("Movement")]
         [SerializeField] private FixedJoystick _fixedJoystick;
-        [SerializeField] private Transform orientation;
         [SerializeField] private float _gravity;
         [SerializeField] private float _moveSpeed;
         [SerializeField] private float _rotateSpeed;
@@ -65,7 +64,7 @@ namespace Player
         #region Move
         private void Move()
         {
-            _moveDirection = (orientation.forward * _fixedJoystick.Vertical + orientation.right * _fixedJoystick.Horizontal);
+            _moveDirection = (transform.forward * _fixedJoystick.Vertical + transform.right * _fixedJoystick.Horizontal);
             if(_fixedJoystick.Vertical > 0f)
                 _rigidbody.AddForce(_moveDirection.normalized * _moveSpeed * 10, ForceMode.Force);
             else
