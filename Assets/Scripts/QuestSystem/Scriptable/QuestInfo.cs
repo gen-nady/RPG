@@ -3,21 +3,13 @@ using UnityEngine;
 
 namespace QuestSystem
 {
-    public abstract class QuestInfo : ScriptableObject
+    [CreateAssetMenu(fileName = "Quests", menuName = "Quests/QuestInfo", order = 0)]
+    public class QuestInfo : ScriptableObject
     {
         [SerializeField] private int _idQuest;
-        [SerializeField] private string _nameQuest;
+        [SerializeField] private string _name;
         [SerializeField] private string _discription;
-        private CurrentStateQuest _currentStateQuest;
-        public string Discription => _discription;
-        public string Name => _nameQuest;
-        public CurrentStateQuest CurrentStateQuest => _currentStateQuest;
-        public abstract string CurrentProgress;
-        private IMovable movableImplementation;
-
-        public void ChangeQuestState(CurrentStateQuest state)
-        {
-            _currentStateQuest = state;
-        }
+        [SerializeField] private int _expirience;
+        [SerializeField] private int _gold;
     }
 }

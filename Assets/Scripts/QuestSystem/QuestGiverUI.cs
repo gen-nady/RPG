@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace QuestSystem
 {
-    public class QuestVisibleModel : Singleton<QuestVisibleModel>
+    public class QuestGiverUI : Singleton<QuestGiverUI>
     {
         [Header("получение квеста")]
         [SerializeField] private TextMeshProUGUI _desriptionText;
@@ -21,17 +20,7 @@ namespace QuestSystem
         
         public void SetQuestText(QuestInfo quest, Action agreeAction)
         {
-            _desriptionText.text = quest.Discription;
-            _questPanel.SetActive(true);
-            if (quest.CurrentStateQuest != CurrentStateQuest.inProgress)
-            {
-                _agreeButton.gameObject.SetActive(true);
-                _agreeButton.onClick.AddListener( () => agreeAction?.Invoke());
-            }
-            else
-            {
-                _agreeButton.gameObject.SetActive(false);
-            }
+         
         }
         public void CloseQuestText()
         {
@@ -41,8 +30,7 @@ namespace QuestSystem
 
         public void SetCurrentQuest(QuestInfo questInfo)
         {
-            _currentQuestText.text = questInfo.Discription;
-            _progressCurrentQuest.text = questInfo.CurrentProgress;
+          
         }
     }
 }
