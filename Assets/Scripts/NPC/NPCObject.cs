@@ -2,7 +2,7 @@
 
 namespace NPC
 {
-    public abstract class NPC : MonoBehaviour
+    public abstract class NPCObject : MonoBehaviour
     {
         protected int _healht;
         protected IMovable _movable;

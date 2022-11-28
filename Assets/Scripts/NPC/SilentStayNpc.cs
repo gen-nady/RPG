@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NPC
 {
-    public class SilentStayNPC : NPC
+    public class SilentStayNpc : NPCObject
     {
         private void Awake()
         {

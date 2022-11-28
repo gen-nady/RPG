@@ -4,7 +4,7 @@ namespace NPC
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Animator))]
-    public class SilentMoveNPC : NPC
+    public class SilentMoveNpc : NPCObject
     {
         [SerializeField] private Vector3 _direction;
         [SerializeField] private float _speed;
