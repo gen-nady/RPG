@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d787caf6fee5427cab5e7c4c95f55b71, type: 3}
+  m_Script: {fileID: 11500000, guid: aa3883b214504b89b51627fd35d50547, type: 3}
   m_Name: Quests
   m_EditorClassIdentifier: 
-  _idQuest: 1
-  _idGave: 1
-  _idGet: 1
-  _discription: "\u0412\u041E\u0422 \u0422\u0410\u041A\u041E\u0415 \u041E\u041F\u0418\u0421\u0410\u041D\u0418\u0415
-    \u0428\u041E \u041F\u041F\u0426"
-  _prevQuest: 
-  _countToKill: 8
-  _currentToKill: 0
-  typeKill: {fileID: 0}
+  _id: 1
+  _idQuest: 2
+  _name: RHE
+  _discription: "\u041F\u0418\u0417\u0414\u0410 \u0412\u0421\u0415\u041C \u041D\u0410\u0425\u0423\u0419"
+  _expirience: 324
+  _gold: 234
+  CountToKill: 10
+  CurrentToKill: 0
+  TypeKill: {fileID: 0}

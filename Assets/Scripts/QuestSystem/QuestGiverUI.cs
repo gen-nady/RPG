@@ -12,25 +12,17 @@ namespace QuestSystem
         [SerializeField] private TextMeshProUGUI _desriptionText;
         [SerializeField] private GameObject _questPanel;
         [SerializeField] private Button _agreeButton;
-
-        [Header("Отображение текущего квеста")]
-        [SerializeField] private TextMeshProUGUI _currentQuestText;
-        [SerializeField] private TextMeshProUGUI _progressCurrentQuest;
         
-        
-        public void SetQuestText(QuestInfo quest, Action agreeAction)
+        public void SetQuestText(Quest quest, Action agreeAction)
         {
-         
+            _questPanel.SetActive(true);
+            _desriptionText.text = quest.Discription;
+            _agreeButton.onClick.AddListener(() => agreeAction?.Invoke());
         }
         public void CloseQuestText()
         {
             _agreeButton.onClick.RemoveAllListeners();
             _questPanel.SetActive(false);
-        }
-
-        public void SetCurrentQuest(QuestInfo questInfo)
-        {
-          
         }
     }
 }

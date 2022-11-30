@@ -5,33 +5,35 @@ namespace QuestSystem
 {
     public class QuestGiver : MonoBehaviour
     {
+        [SerializeField] private Quest _quests;
         [SerializeField] private GameObject _activeQuest;
-        
+        private bool isActiveQuest;
         private PlayerQuest _playerQuest;
+        private QuestGiverUI _questGiverUI;
         private void Start()
         {
             Constructor();
-            CheckForActiveQuest();
         }
 
         private void Constructor()
         {
             _playerQuest = PlayerQuest.Instance;
+            _questGiverUI = QuestGiverUI.Instance;
         }
 
-        private void CheckForActiveQuest()
+        private void AddQusetToPlayer()
         {
-          
+            _playerQuest.SetQuest(_quests);
+            isActiveQuest = true;
+            _activeQuest.GetComponent<MeshRenderer>().material.color = Color.red;
         }
-
-        private void AddQuestToPlayer()
-        {
-        }
-
+        
+        
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<PlayerMovement>())
+            if (other.GetComponent<PlayerMovement>() && !isActiveQuest)
             {
+                _questGiverUI.SetQuestText(_quests, AddQusetToPlayer);
             }
         }
 

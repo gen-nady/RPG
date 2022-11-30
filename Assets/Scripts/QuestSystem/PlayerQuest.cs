@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace QuestSystem
 {
     public class PlayerQuest : Singleton<PlayerQuest>
     {
-        private QuestInfo _playerQuest;
+        private Quest _playerQuest;
         private QuestGiverUI questGiverUI;
-
+        [SerializeField] private TextMeshProUGUI _desriptionText;
         private void Start()
         {
             Constructor();
@@ -18,11 +19,11 @@ namespace QuestSystem
         {
             questGiverUI = QuestGiverUI.Instance;
         }
-        public void SetQuest(QuestInfo quest)
+
+        public void SetQuest(Quest quest)
         {
             _playerQuest = quest;
-            //questGiverUI.CurrentProgress
+            _desriptionText.text = _playerQuest.CurrentProgress();
         }
-        
     }
 }
