@@ -6,17 +6,17 @@ namespace QuestSystem
     [CreateAssetMenu(fileName = "Quests", menuName = "Quests/Quest", order = 0)]
     public class QuestToKill : Quest
     {
-        public int CountToKill;
-        public int CurrentToKill;
-        public NPCObject TypeKill;
+        [SerializeField] private int _countToKill;
+        [SerializeField] private int _currentToKill;
+        [SerializeField] private NPCObject _typeKill;
         public override bool IsCompleted()
         {
-            return CountToKill == CurrentToKill;
+            return _countToKill == _currentToKill;
         }
 
         public override string CurrentProgress()
         {
-            return $"Убито {typeof(NPCObject)} {CurrentToKill} из {CountToKill}";
+            return $"Убито {typeof(NPCObject)} {_currentToKill} из {_countToKill}";
         }
     }
 }

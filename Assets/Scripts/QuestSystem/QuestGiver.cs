@@ -1,15 +1,18 @@
-﻿using Player;
+﻿using System;
+using Player;
 using UnityEngine;
 
 namespace QuestSystem
 {
     public class QuestGiver : MonoBehaviour
     {
+        public static event Action<Quest> AddQuestToPlayer;
+        public static event Action<Quest, Action> SetDescriprionQuest;
         [SerializeField] private Quest _quests;
-        [SerializeField] private GameObject _activeQuest;
-        private bool isActiveQuest;
-        private PlayerQuest _playerQuest;
+        [SerializeField] private MeshRenderer _activeQuest;
         private QuestGiverUI _questGiverUI;
+        private bool isActiveQuest;
+        
         private void Start()
         {
             Constructor();
@@ -17,15 +20,14 @@ namespace QuestSystem
 
         private void Constructor()
         {
-            _playerQuest = PlayerQuest.Instance;
             _questGiverUI = QuestGiverUI.Instance;
         }
 
         private void AddQusetToPlayer()
         {
-            _playerQuest.SetQuest(_quests);
+            AddQuestToPlayer?.Invoke(_quests);
             isActiveQuest = true;
-            _activeQuest.GetComponent<MeshRenderer>().material.color = Color.red;
+            _activeQuest.material.color = Color.red;
         }
         
         
@@ -33,7 +35,7 @@ namespace QuestSystem
         {
             if (other.GetComponent<PlayerMovement>() && !isActiveQuest)
             {
-                _questGiverUI.SetQuestText(_quests, AddQusetToPlayer);
+                SetDescriprionQuest?.Invoke(_quests, AddQusetToPlayer);
             }
         }
 
@@ -41,6 +43,7 @@ namespace QuestSystem
         {
             if (other.GetComponent<PlayerMovement>())
             {
+                _questGiverUI.CloseQuestText();
             }
         }
     }

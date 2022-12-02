@@ -12,8 +12,18 @@ namespace QuestSystem
         [SerializeField] private TextMeshProUGUI _desriptionText;
         [SerializeField] private GameObject _questPanel;
         [SerializeField] private Button _agreeButton;
-        
-        public void SetQuestText(Quest quest, Action agreeAction)
+
+        private void Start()
+        {
+            QuestGiver.SetDescriprionQuest += SetQuestText;
+        }
+
+        private void OnDestroy()
+        {
+            QuestGiver.SetDescriprionQuest -= SetQuestText;
+        }
+
+        private void SetQuestText(Quest quest, Action agreeAction)
         {
             _questPanel.SetActive(true);
             _desriptionText.text = quest.Discription;
