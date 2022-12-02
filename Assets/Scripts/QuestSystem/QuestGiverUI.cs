@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace QuestSystem
 {
-    public class QuestGiverUI : Singleton<QuestGiverUI>
+    public class QuestGiverUI : MonoBehaviour
     {
         [Header("получение квеста")]
         [SerializeField] private TextMeshProUGUI _desriptionText;
