@@ -5,9 +5,8 @@ using UnityEngine;
 
 namespace QuestSystem
 {
-    public class PlayerQuest : Singleton<PlayerQuest>
+    public class PlayerQuest : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI _desriptionText;
         private Quest _playerQuest;
 
         private void Start()
@@ -23,7 +22,6 @@ namespace QuestSystem
         private void SetQuest(Quest quest)
         {
             _playerQuest = quest;
-            _desriptionText.text = _playerQuest.CurrentProgress();
         }
     }
 }

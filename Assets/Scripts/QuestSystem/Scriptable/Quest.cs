@@ -13,6 +13,7 @@ namespace QuestSystem
         [SerializeField] private int _expirience;
         [SerializeField] private int _gold;
 
+        public string Name => _name;
         public string Discription => _discription;
         
         public abstract bool IsCompleted();

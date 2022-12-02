@@ -28,6 +28,11 @@ namespace Player
         private Animator _animator;
         private CurrentStatePlayer _currentStatePlayer;
         //Helper
+        private readonly int _run = Animator.StringToHash("Run");
+        private readonly int _idle = Animator.StringToHash("Idle");
+        private readonly int _startRun = Animator.StringToHash("StartRun");
+        private readonly int _jump = Animator.StringToHash("Jump");
+        private readonly int _fall = Animator.StringToHash("Fall");
         private Vector3 zeroGravity => new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         private float currentSpeedRunAnimation => _fixedJoystick.Direction.y > 0
             ? Mathf.Max(Mathf.Abs(_fixedJoystick.Direction.x), Mathf.Abs(_fixedJoystick.Direction.y))
@@ -91,17 +96,17 @@ namespace Player
         {
             if (_fixedJoystick.Direction.x > 0 || _fixedJoystick.Direction.y != 0)
             {
-                _animator.SetFloat("Run",currentSpeedRunAnimation);
+                _animator.SetFloat(_run,currentSpeedRunAnimation);
                 if (_currentStatePlayer != CurrentStatePlayer.run)
                 {
-                    _animator.ResetTrigger("Idle");
-                    _animator.SetTrigger("StartRun");
+                    _animator.ResetTrigger(_idle);
+                    _animator.SetTrigger(_startRun);
                     _currentStatePlayer = CurrentStatePlayer.run;
                 }
             }
             if(_fixedJoystick.Direction.x == 0 && _fixedJoystick.Direction.y == 0 && _currentStatePlayer != CurrentStatePlayer.idle)
             {
-                _animator.SetTrigger("Idle");
+                _animator.SetTrigger(_idle);
                 _currentStatePlayer = CurrentStatePlayer.idle;
             }
         }
@@ -118,17 +123,17 @@ namespace Player
                 {
                     isJump = false;
                     isFall = false;
-                    _animator.ResetTrigger("Fall");
-                    _animator.ResetTrigger("Jump");
+                    _animator.ResetTrigger(_fall);
+                    _animator.ResetTrigger(_jump);
                     if (_currentStatePlayer == CurrentStatePlayer.run)
                     {
-                        _animator.ResetTrigger("Idle");
-                        _animator.SetFloat("Run",currentSpeedRunAnimation);
-                        _animator.SetTrigger("StartRun");
+                        _animator.ResetTrigger(_idle);
+                        _animator.SetFloat(_run,currentSpeedRunAnimation);
+                        _animator.SetTrigger(_startRun);
                     }
                     else if (_currentStatePlayer == CurrentStatePlayer.idle)
                     {
-                        _animator.SetTrigger("Idle");
+                        _animator.SetTrigger(_idle);
                     }
                 }
             }
@@ -138,7 +143,7 @@ namespace Player
                 _rigidbody.AddForce(Vector3.down * _gravity, ForceMode.Force);
                 if (!isFall && timerToFall < 0f && !isJump)
                 {
-                    _animator.SetTrigger("Fall");
+                    _animator.SetTrigger(_fall);
                     isFall = true;
                 }
             }
@@ -151,7 +156,7 @@ namespace Player
                 StartCoroutine(JumpWait());
                 _rigidbody.velocity = zeroGravity;
                 _rigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
-                _animator.SetTrigger("Jump");
+                _animator.SetTrigger(_jump);
             }
         }
         

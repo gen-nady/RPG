@@ -10,7 +10,7 @@ public class TimesDay : MonoBehaviour
     [SerializeField] private Light _dirLight;
     private bool _isNight;
     private Vector3 _defaultAngles;
-
+    
     private void Start()
     {
         _defaultAngles = _dirLight.transform.localEulerAngles;
