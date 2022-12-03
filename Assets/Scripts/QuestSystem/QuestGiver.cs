@@ -1,4 +1,7 @@
 ﻿using System;
+using DG.Tweening;
+using Helper;
+using NPC;
 using Player;
 using UnityEngine;
 
@@ -12,6 +15,14 @@ namespace QuestSystem
         [SerializeField] private MeshRenderer _activeQuest;
         private bool isActiveQuest;
 
+        private void Start()
+        {
+            DOTween.Sequence()
+                .Append(_activeQuest.transform.DOScale(new Vector3(1f, 1f, 1f), 2f))
+                .Append(_activeQuest.transform.DOScale(new Vector3(0.5f, 0.5f, 0.5f) , 2f))
+                .SetLoops(-1);
+        }
+        
         private void AddQusetToPlayer()
         {
             AddQuestToPlayer?.Invoke(_quests);

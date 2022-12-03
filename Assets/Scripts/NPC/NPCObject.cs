@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
+using Helper;
 
 namespace NPC
 {
     public abstract class NPCObject : MonoBehaviour
     {
-        protected int _healht;
         protected IMovable _movable;
         protected ISpeakble _speakble;
         

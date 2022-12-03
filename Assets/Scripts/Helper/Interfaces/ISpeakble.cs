@@ -1,4 +1,4 @@
-﻿namespace NPC
+﻿namespace Helper
 {
     public interface ISpeakble
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NPC
+namespace Helper
 {
     public class StayNPC : IMovable
     {

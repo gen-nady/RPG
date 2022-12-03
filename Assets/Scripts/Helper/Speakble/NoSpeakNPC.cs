@@ -1,4 +1,4 @@
-﻿namespace NPC
+﻿namespace Helper
 {
     public class NoSpeakNPC : ISpeakble
     {
