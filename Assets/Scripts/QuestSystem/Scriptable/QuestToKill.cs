@@ -1,4 +1,5 @@
-﻿using NPC;
+﻿using Enemy;
+using NPC;
 using UnityEngine;
 
 namespace QuestSystem
@@ -8,7 +9,7 @@ namespace QuestSystem
     {
         [SerializeField] private int _countToKill;
         [SerializeField] private int _currentToKill;
-        [SerializeField] private NPCObject _typeKill;
+        [SerializeField] private MainEnemy _typeKill;
         public override bool IsCompleted()
         {
             return _countToKill == _currentToKill;
@@ -16,7 +17,7 @@ namespace QuestSystem
 
         public override string CurrentProgress()
         {
-            return $"Убито {typeof(NPCObject)} {_currentToKill} из {_countToKill}";
+            return $"Убито {nameof(MainEnemy)} {_currentToKill} из {_countToKill}";
         }
     }
 }
