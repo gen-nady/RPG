@@ -1,4 +1,6 @@
-﻿using Enemy;
+﻿using Cinemachine;
+using Enemy;
+using Player;
 using UnityEngine;
 
 namespace Helper
@@ -7,7 +9,7 @@ namespace Helper
     {
         public void Attack(Collider other)
         {
-            if (other.GetComponent<MainEnemy>())
+            if (other.GetComponent<PlayerMovement>())
             {
                 
             }
