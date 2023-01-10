@@ -4,15 +4,16 @@ using Helper;
 using NPC;
 using Player;
 using UnityEngine;
+using Zenject;
 
 namespace QuestSystem
 {
     public class QuestGiver : MonoBehaviour
     {
         public static event Action<Quest> AddQuestToPlayer;
-        public static event Action<Quest, Action> SetDescriprionQuest;
         [SerializeField] private Quest _quests;
         [SerializeField] private MeshRenderer _activeQuest;
+        [Inject] private QuestGiverUI _questGiverUI;
         private bool isActiveQuest;
 
         private void Start()
@@ -34,7 +35,7 @@ namespace QuestSystem
         {
             if (other.GetComponent<PlayerMovement>() && !isActiveQuest)
             {
-                SetDescriprionQuest?.Invoke(_quests, AddQusetToPlayer);
+                _questGiverUI.SetQuestText(_quests, AddQusetToPlayer);
             }
         }
     }

@@ -1,9 +1,8 @@
-﻿using NPC;
+﻿using System;
 using UnityEngine;
 
 namespace QuestSystem
 {
-   
     public abstract class Quest : ScriptableObject
     {
         [SerializeField] private int _id;
@@ -12,12 +11,10 @@ namespace QuestSystem
         [SerializeField] private string _discription;
         [SerializeField] private int _expirience;
         [SerializeField] private int _gold;
-
         public string Name => _name;
         public string Discription => _discription;
-        
-        public abstract bool IsCompleted();
-
+        public abstract bool ProgressQuest<Type>();
         public abstract string CurrentProgress();
+        public abstract void Reset();
     }
 }

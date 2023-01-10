@@ -13,17 +13,7 @@ namespace QuestSystem
         [SerializeField] private GameObject _questPanel;
         [SerializeField] private Button _agreeButton;
 
-        private void Start()
-        {
-            QuestGiver.SetDescriprionQuest += SetQuestText;
-        }
-
-        private void OnDestroy()
-        {
-            QuestGiver.SetDescriprionQuest -= SetQuestText;
-        }
-
-        private void SetQuestText(Quest quest, Action agreeAction)
+        public void SetQuestText(Quest quest, Action agreeAction)
         {
             _questPanel.SetActive(true);
             _desriptionText.text = quest.Discription;

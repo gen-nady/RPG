@@ -16,7 +16,10 @@ namespace QuestSystem
         {
             QuestGiver.AddQuestToPlayer -= SetInfoOrQuest;
         }
-        
+        public void ChangeProgress(Quest quest)
+        {
+          _currentProgressQuest.text = quest.CurrentProgress();
+        }
         private void SetInfoOrQuest(Quest quest)
         {
             _nameQuest.text = quest.Name;

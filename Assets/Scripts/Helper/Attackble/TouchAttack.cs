@@ -9,8 +9,9 @@ namespace Helper
     {
         public void Attack(Collider other)
         {
-            if (other.GetComponent<PlayerMovement>())
+            if (other.GetComponent<TouchEnemy>())
             {
+                other.GetComponent<TouchEnemy>().Kill();
                 
             }
         }
