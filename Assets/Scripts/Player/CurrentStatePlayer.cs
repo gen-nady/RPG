@@ -3,7 +3,6 @@
     public enum CurrentStatePlayer
     {
         idle,
-        run,
-        jump
+        run
     }
 }

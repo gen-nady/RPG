@@ -10,11 +10,13 @@ namespace QuestSystem
         private void Start()
         {
             QuestGiver.AddQuestToPlayer += SetInfoOrQuest;
+            QuestGiver.QuestCompleted += ResetQuest;
         }
 
         private void OnDestroy()
         {
             QuestGiver.AddQuestToPlayer -= SetInfoOrQuest;
+            QuestGiver.QuestCompleted -= ResetQuest;
         }
         public void ChangeProgress(Quest quest)
         {
@@ -24,6 +26,11 @@ namespace QuestSystem
         {
             _nameQuest.text = quest.Name;
             _currentProgressQuest.text = quest.CurrentProgress();
+        }
+        private void ResetQuest(Quest quest)
+        {
+            _nameQuest.text = string.Empty;
+            _currentProgressQuest.text = string.Empty;
         }
     }
 }

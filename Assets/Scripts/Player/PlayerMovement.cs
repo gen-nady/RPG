@@ -28,6 +28,8 @@ namespace Player
         private Animator _animator;
         private CurrentStatePlayer _currentStatePlayer;
         //Helper
+        private const float _modiferSpeedForward = 2f;
+        private const float _modiferSpeedBack = 8f;
         private readonly int _run = Animator.StringToHash("Run");
         private readonly int _idle = Animator.StringToHash("Idle");
         private readonly int _startRun = Animator.StringToHash("StartRun");
@@ -69,11 +71,11 @@ namespace Player
         #region Move
         private void Move()
         {
-            _moveDirection = (transform.forward * _fixedJoystick.Vertical + transform.right * _fixedJoystick.Horizontal);
-            if(_fixedJoystick.Vertical > 0f)
-                _rigidbody.AddForce(_moveDirection.normalized * _moveSpeed * 10, ForceMode.Force);
-            else
-                _rigidbody.AddForce(_moveDirection.normalized * _moveSpeed, ForceMode.Force);
+            _moveDirection = transform.forward * (_fixedJoystick.Vertical > 0
+                                 ? Mathf.Max(_fixedJoystick.Vertical, Mathf.Abs(_fixedJoystick.Horizontal))
+                                 : Mathf.Min(_fixedJoystick.Vertical, -Mathf.Abs(_fixedJoystick.Horizontal)))
+                             + transform.right * _fixedJoystick.Horizontal;
+            _rigidbody.AddForce(_moveDirection.normalized * (_moveSpeed / _fixedJoystick.Vertical > 0f ? _modiferSpeedForward : _modiferSpeedBack), ForceMode.Impulse);
             if(_fixedJoystick.Direction.x == 0f && _fixedJoystick.Direction.y == 0f)
                 _rigidbody.velocity =new Vector3(0f, _rigidbody.velocity.y,0f);
         }

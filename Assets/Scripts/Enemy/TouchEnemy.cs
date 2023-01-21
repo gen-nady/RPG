@@ -1,8 +1,4 @@
-﻿
-using System;
-using QuestSystem;
-
-namespace Enemy
+﻿namespace Enemy
 {
     public class TouchEnemy : MainEnemy
     {

@@ -1,6 +1,4 @@
-﻿using Cinemachine;
-using Enemy;
-using Player;
+﻿using Enemy;
 using UnityEngine;
 
 namespace Helper
@@ -12,7 +10,6 @@ namespace Helper
             if (other.GetComponent<TouchEnemy>())
             {
                 other.GetComponent<TouchEnemy>().Kill();
-                
             }
         }
     }

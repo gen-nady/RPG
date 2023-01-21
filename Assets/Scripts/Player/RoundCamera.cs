@@ -6,11 +6,11 @@ public class RoundCamera : MonoBehaviour
     private Touch _touch;
     private Vector2 _touchPosition;
     private Quaternion _rotation;
-    private bool isCanRotate;
-    private bool isZero;
-    private void Update ()
+    private bool _isCanRotate;
+    private bool _isZero;
+    private void Update()
     {
-        if (isCanRotate)
+        if (_isCanRotate)
         {
             if (Input.touchCount > 0)
             {
@@ -20,21 +20,21 @@ public class RoundCamera : MonoBehaviour
                     var rotatio = new Vector3(-_touch.deltaPosition.y * _rotateSpeedModifer,
                         -_touch.deltaPosition.x * _rotateSpeedModifer, 0f);
                     transform.eulerAngles += rotatio;
-                    isZero = false;
+                    _isZero = false;
                 }
             }
         }
         else
         {
-            if(isZero) return;
+            if(_isZero) return;
             transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.identity, Time.deltaTime * 10f );
             if (transform.eulerAngles == Vector3.zero)
-                isZero = true;
+                _isZero = true;
         }
     }
 
     public void CanRotate(bool isTouch)
     {
-        isCanRotate = isTouch;
+        _isCanRotate = isTouch;
     }
 }

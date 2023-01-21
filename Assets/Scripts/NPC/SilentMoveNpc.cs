@@ -3,8 +3,7 @@ using Helper;
 
 namespace NPC
 {
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(Animator))]
+
     public class SilentMoveNpc : NPCObject
     {
         [SerializeField] private Vector3 _direction;

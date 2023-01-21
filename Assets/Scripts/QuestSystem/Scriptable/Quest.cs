@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace QuestSystem
 {
@@ -13,7 +12,10 @@ namespace QuestSystem
         [SerializeField] private int _gold;
         public string Name => _name;
         public string Discription => _discription;
-        public abstract bool ProgressQuest<Type>();
+        public int Expirience => _expirience;
+        public int Gold => _gold;
+        public abstract void ChangeProgressQuest<T>();
+        public abstract bool IsCompleteQuest();
         public abstract string CurrentProgress();
         public abstract void Reset();
     }

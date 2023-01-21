@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29b4426620c1465c9525647e51a0d160, type: 3}
+  m_Name: QuestsFind
+  m_EditorClassIdentifier: 
+  _id: 2
+  _idQuest: 2
+  _name: "\u0415\u0429\u0415 \u041A\u0420\u0423\u0427\u0415 \u0417\u0410\u0414\u0410\u041D\u0418\u0415"
+  _discription: "\u041D\u0410\u0419\u0422\u0418 \u0410\u041C\u0423\u041B\u0415\u0422
+    \u0412 \u041B\u0415\u0421\u0423(\u041A\u0420\u0423\u0413\u041B\u042B\u0419 \u0422\u0410\u041A\u041E\u0419)"
+  _expirience: 888
+  _gold: 777
+  _typePickUp: {fileID: 4300097290271609791, guid: 0d1ee138bf8f61848b706d885d07442f, type: 3}
+  _localizedName: "\u0410\u041C\u0423\u041B\u0415\u0422\u041E\u0412"
+  _countFind: 1
+  _currentFind: 0

@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using Helper;
+﻿using Helper;
 
 namespace NPC
 {

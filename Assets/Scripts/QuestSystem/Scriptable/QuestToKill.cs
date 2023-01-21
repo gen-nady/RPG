@@ -1,6 +1,4 @@
-﻿using System;
-using Enemy;
-using NPC;
+﻿using Enemy;
 using UnityEngine;
 
 namespace QuestSystem
@@ -9,26 +7,38 @@ namespace QuestSystem
     public class QuestToKill : Quest
     {
         [SerializeField] private MainEnemy _typeKill;
+        [SerializeField] private string _localizedMaimEnemy;
         [SerializeField] private int _countToKill;
         [SerializeField] private int _currentToKill = 0;
 
-        public override bool ProgressQuest<TypeKill>()
+        private void OnEnable()
+        {
+            Reset();
+        }
+
+        public override void ChangeProgressQuest<TypeKill>()
         {
             if (_typeKill is TypeKill)
             {
                 _currentToKill++;
             }
+        }
+
+        public override bool IsCompleteQuest()
+        {
             return _countToKill == _currentToKill;
         }
-        
+
         public override string CurrentProgress()
         {
-            return $"Убито {nameof(MainEnemy)} {_currentToKill} из {_countToKill}";
+            return IsCompleteQuest() 
+                ? "Можете сдать квест!" 
+                : $"Убито {_localizedMaimEnemy} {_currentToKill} из {_countToKill}";
         }
 
         public override void Reset()
         {
-            _countToKill = 0;
+            _currentToKill = 0;
         }
     }
 }

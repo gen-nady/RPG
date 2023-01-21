@@ -1,33 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using Enemy;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace QuestSystem
 {
     public class PlayerQuest : MonoBehaviour
     {
-        [Inject] private PlayerQuestUI _playerQuestUI;
         private Quest _playerQuest;
-        //public static event Action<Quest> QuestChange; 
+        [Inject] private PlayerQuestUI _playerQuestUI;
+        public Quest CurrentQuestPlayer => _playerQuest;
         public void DeadEnemy<TypeDead>()
         {
-            var isComplete = _playerQuest.ProgressQuest<TypeDead>();
-            _playerQuestUI.ChangeProgress(_playerQuest);
+            if (_playerQuest != null)
+            {
+                _playerQuest.ChangeProgressQuest<TypeDead>();
+                _playerQuestUI.ChangeProgress(_playerQuest);
+            }
+        }
+        
+        public void PickUp<FindObject>()
+        {
+            if (_playerQuest != null)
+            {
+                _playerQuest.ChangeProgressQuest<FindObject>();
+                _playerQuestUI.ChangeProgress(_playerQuest);
+            }
         }
         
         private void OnEnable()
         {
             QuestGiver.AddQuestToPlayer += SetQuest;
+            QuestGiver.QuestCompleted += GetBonuses;
         }
 
         private void OnDestroy()
         {
             QuestGiver.AddQuestToPlayer -= SetQuest;
+            QuestGiver.QuestCompleted -= GetBonuses;
         }
         
+        private void GetBonuses(Quest quest)
+        {
+            Debug.Log($"Получено опыта: {quest.Expirience}");
+            Debug.Log($"Получено золота: {quest.Gold}");
+        }
         private void SetQuest(Quest quest)
         {
             _playerQuest = quest;
