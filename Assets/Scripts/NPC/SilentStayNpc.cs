@@ -2,7 +2,7 @@
 
 namespace NPC
 {
-    public class SilentStayNpc : NPCObject
+    public class SilentStayNpc : NPC
     {
         private void Awake()
         {

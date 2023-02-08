@@ -4,7 +4,7 @@ using Helper;
 namespace NPC
 {
 
-    public class SilentMoveNpc : NPCObject
+    public class SilentMoveNpc : NPC
     {
         [SerializeField] private Vector3 _direction;
         [SerializeField] private float _speed;

@@ -9,7 +9,7 @@ using Zenject;
 
 namespace QuestSystem
 {
-    public class QuestGiver : NPCObject
+    public class QuestGiver : NPC.NPC
     {
         public static event Action<Quest> AddQuestToPlayer;
         public static event Action<Quest> QuestCompleted;

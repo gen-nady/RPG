@@ -3,7 +3,7 @@ using Helper;
 
 namespace NPC
 {
-    public abstract class NPCObject : MonoBehaviour
+    public abstract class NPC : MonoBehaviour
     {
         protected IMovable _movable;
         protected ISpeakble _speakble;

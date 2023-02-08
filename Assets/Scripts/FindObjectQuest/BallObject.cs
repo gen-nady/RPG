@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace FindObjectQuest
+﻿namespace FindObjectQuest
 {
     public class BallObject : DefaultObjectFind
     {
